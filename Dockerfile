@@ -97,4 +97,7 @@ RUN set -ex \
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /src/*.deb
 
+# Temporary fix for error "java.security.InvalidAlgorithmParameterException: the trustAnchors parameter must be non-empty"
+COPY cacerts /etc/ssl/certs/java/cacerts
+
 COPY dockerd-entrypoint.sh /usr/local/bin/
