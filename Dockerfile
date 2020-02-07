@@ -3,22 +3,22 @@ FROM phusion/baseimage:latest
 ENV TZ 'Europe/Tallinn'
 
 ARG DOCKER_BUCKET="download.docker.com" 
-ARG DOCKER_VERSION="5:18.09.6~3-0~ubuntu-xenial" 
+ARG DOCKER_VERSION="5:19.03.5~3-0~ubuntu-xenial" 
 ARG DOCKER_CHANNEL="stable" 
 ARG DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" 
-ARG DOCKER_COMPOSE_VERSION="1.24.0"
+ARG DOCKER_COMPOSE_VERSION="1.24.3"
 
 ENV NVM_DIR /root/.nvm
-ENV NODE_VERSION v8.16.0
+ENV NODE_VERSION v12.13.0
 
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
 ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 ENV PATH=$JAVA_HOME/bin:$PATH
 
-ARG MAVEN_VERSION=3.6.1
+ARG MAVEN_VERSION=3.6.3
 ARG USER_HOME_DIR="/root"
-ARG MAVEN_SHA512="b4880fb7a3d81edd190a029440cdf17f308621af68475a4fe976296e71ff4a4b546dd6d8a58aaafba334d309cc11e638c52808a4b0e818fc0fd544226d952544"
+ARG MAVEN_SHA512="c35a1803a6e70a126e80b2b3ae33eed961f83ed74d18fcd16909b2d44d7dada3203f1ffe726c17ef8dcca2dcaa9fca676987befeadc9b9f759967a8cb77181c0"
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN echo $TZ > /etc/timezone && \
@@ -61,7 +61,7 @@ RUN add-apt-repository \
 RUN mkdir /root/.nvm
 
 # Install nvm with node and npm
-RUN cd /root && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash 
+RUN cd /root && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.2/install.sh | bash 
 RUN . $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default
 
 # Install Java and Maven
