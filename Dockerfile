@@ -14,7 +14,7 @@ ENV NODE_VERSION v8.12.0
 
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
-ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/
 ENV PATH=$JAVA_HOME/bin:$PATH
 
 ARG MAVEN_VERSION=3.5.4
@@ -23,7 +23,8 @@ ARG SHA=ce50b1c91364cb77efe3776f756a6d92b76d9038b0a0782f7d53acf1e997a14d
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN echo $TZ > /etc/timezone && \
-    apt-get update && apt-get install -y --no-install-recommends wget \
+    add-apt-repository ppa:openjdk-r/ppa \
+    && apt-get update && apt-get install -y --no-install-recommends wget \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update && apt-get install -y --no-install-recommends \
@@ -37,7 +38,7 @@ RUN echo $TZ > /etc/timezone && \
     iptables \
     libgconf-2-4 \ 
     lxc \
-    openjdk-8-jdk-headless \
+    openjdk-11-jdk-headless \
     python \
     software-properties-common \
     tzdata && \
@@ -53,7 +54,7 @@ RUN cd /root && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.
 RUN . $NVM_DIR/nvm.sh && nvm install $NODE_VERSION && nvm alias default $NODE_VERSION && nvm use default
 
 # Install Java and Maven
-RUN ln -s /etc/java-8-openjdk /usr/lib/jvm/java-8-openjdk-$(dpkg --print-architecture)/conf
+RUN ln -s /etc/java-11-openjdk /usr/lib/jvm/java-11-openjdk-$(dpkg --print-architecture)/conf
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
   && curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-${MAVEN_VERSION}-bin.tar.gz \
   && echo "${SHA}  /tmp/apache-maven.tar.gz" | sha256sum -c - \
