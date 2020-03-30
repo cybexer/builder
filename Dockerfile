@@ -1,15 +1,16 @@
-FROM phusion/baseimage:latest
+# Use Bionic Beaver as base image
+FROM phusion/baseimage:0.11
 
 ENV TZ 'Europe/Tallinn'
+ENV DEBIAN_FRONTEND noninteractive
 
-ARG DOCKER_BUCKET="download.docker.com" 
-ARG DOCKER_VERSION="5:19.03.5~3-0~ubuntu-xenial" 
+ARG DOCKER_VERSION="5:19.03.8~3-0~ubuntu-bionic" 
 ARG DOCKER_CHANNEL="stable" 
 ARG DIND_COMMIT="3b5fac462d21ca164b3778647420016315289034" 
-ARG DOCKER_COMPOSE_VERSION="1.24.3"
+ARG DOCKER_COMPOSE_VERSION="1.25.4"
 
 ENV NVM_DIR /root/.nvm
-ENV NODE_VERSION v12.13.0
+ENV NODE_VERSION v12.16.1
 
 ENV NODE_PATH $NVM_DIR/versions/node/$NODE_VERSION/lib/node_modules
 ENV PATH      $NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH
@@ -24,7 +25,8 @@ ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 RUN echo $TZ > /etc/timezone && \
     add-apt-repository ppa:openjdk-r/ppa \
     && add-apt-repository ppa:git-core/ppa \
-    && apt-get update && apt-get install -y --no-install-recommends wget \
+    && apt-get update && apt-get upgrade -y -o Dpkg::Options::="--force-confold" \
+    && apt-get install -y --no-install-recommends wget \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
